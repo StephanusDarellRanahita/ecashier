@@ -10,8 +10,8 @@
         <div class="grid w-full grid-cols-3 gap-[10px]">
             <button @click="addNota(data.id)" v-for="(data, index) in filteredMenu" :key="index" class="p-[10px] border border-red-600 rounded-md
                          flex justify-between min-h-[1cm] max-h-[1cm] hover:bg-red-300 items-center">
-                <p>{{ data.nama }}</p>
-                <p>@{{ data.harga }}</p>
+                <p class="my-auto">{{ data.nama }}</p>
+                <p class="my-auto">@{{ data.harga }}</p>
             </button>
         </div>
     </div>

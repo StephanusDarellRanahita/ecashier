@@ -7,9 +7,11 @@ export default createStore({
     state: {
         menu: [],
         dataNota: [],
+        listNota: [],
         query: '',
         idTransaksi: '',
-        totalPrice: 0
+        totalPrice: 0,
+        disc: 0
     },
     mutations: {
         setMenu(state, menu) {
@@ -21,11 +23,17 @@ export default createStore({
         setDataNota(state, dataNota) {
             state.dataNota = dataNota
         },
+        setListNota(state, listNota) {
+            state.listNota = listNota
+        },
         setIdTransaksi(state, idTransaksi) {
             state.idTransaksi = idTransaksi
         },
         setTotalPrice(state, totalPrice) {
             state.totalPrice = totalPrice
+        },
+        setDiscount(state, disc) {
+            state.disc = disc
         }
     },
     actions: {
@@ -41,23 +49,36 @@ export default createStore({
                 console.error(e.response.message)
             })
         },
-        async fetchNota({ commit }, { id_transaksi }) {
+        async fetchNota({ commit }, { id_transaksi, disc }) {
             await axios.get(url + `nota/${id_transaksi}`, {
                 headers: {
                     Accept: 'application/json'
                 }
             }).then(res => {
-                console.log('ID' + id_transaksi)
-                console.log(res.data)
                 const data = res.data.data
                 const totalPrice = data.reduce(function(total, item) {
                     return total + item.harga
                 },0)
-                console.log(totalPrice)
-                commit('setTotalPrice', totalPrice)
+                let totalDisc = totalPrice * (disc / 100)
+                let finalPrice = totalPrice - totalDisc
+
+                commit('setDiscount', disc)
+                commit('setTotalPrice', finalPrice)
                 commit('setDataNota', data)
             }).catch((e) => {
                 console.error(e)
+            })
+        },
+        async fetchListNota() {
+            await axios.get(url + 'trans', {
+                headers: {
+                    Accept: 'application/json'
+                }
+            }).then(res => {
+                this.commit('setListNota', res.data.data)
+            }).catch((e) => {
+                console.error(e.response)
+                console.error(e.response.data)
             })
         },
         async storeNota({ commit }, { id_transaksi, id_menu }) {
@@ -69,7 +90,6 @@ export default createStore({
                     Accept: 'application/json'
                 }
             }).then(res => {
-                console.log(res.data)
                 this.dispatch('fetchNota', { id_transaksi: id_transaksi })
             }).catch((e) => {
                 console.error(e.response)
@@ -87,6 +107,34 @@ export default createStore({
                 console.error(e.response)
             })
         },
+        async storeTransaksi({ commit }, {id_transaksi, nama, total_harga, diskon}) {
+            await axios.post(url + 'post-trans', {
+                id_transaksi: id_transaksi,
+                nama: nama,
+                total_harga: total_harga,
+                diskon: diskon
+            }, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            }).then(res => {
+            }).catch((e) => {
+                console.error(e.response)
+                console.error(e.response.message)
+            })
+        },
+        async updateNota({ commit }, { id_transaksi, id_menu, jumlah }) {
+            await axios.put(url + `put-nota/${id_transaksi}/${id_menu}?jumlah=${jumlah}`, {}, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            }).then(res => {
+                this.dispatch('fetchNota', { id_transaksi: id_transaksi })
+            }).catch((e) => {
+                console.error(e.response)
+                console.error(e.response.message)
+            })
+        },
         searchQuery({ commit }, query) {
             commit('setQuery', query)
         }
@@ -98,18 +146,22 @@ export default createStore({
         dataNota(state) {
             return state.dataNota
         },
+        listNota(state) {
+            return state.listNota
+        },
         idTransaksi(state) {
             return state.idTransaksi
         },
         totalPrice(state) {
             return state.totalPrice
         },
+        disc(state) {
+            return state.disc
+        },
         filterMenu(state) {
             if(!state.query) {
                 return state.menu
             } 
-
-            console.log(state.query)
             return state.menu.filter(item => 
                 item.nama.toLowerCase().includes(state.query.toLowerCase())
             )
