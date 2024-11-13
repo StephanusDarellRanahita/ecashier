@@ -16,12 +16,12 @@
                 <div v-for="(data, index) in dataNota" :key="index"
                     class="p-[10px] border border-red-600 rounded-md flex mb-[5px] justify-between">
                     <div class="flex md:gap-[200px] justify-between w-full">
-                        <p>{{ data.menu.nama }}</p>
+                        <p class="my-auto">{{ data.menu.nama }}</p>
                         <input @blur="update(data.jumlah, data.id_menu)"
                             class="border border-red-600 w-[30px] md:w-[40px] md:px-[5px] text-center"
                             v-model="data.jumlah" />
                     </div>
-                    <p class="w-[3cm] md:w-[5cm] text-center">Rp {{ formatNumber(data.harga) }},00</p>
+                    <p class="w-[3cm] md:w-[5cm] my-auto text-center">Rp {{ formatNumber(data.harga) }},00</p>
                 </div>
             </div>
         </div>

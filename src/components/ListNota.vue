@@ -1,6 +1,6 @@
 <template>
     <div class="h-screen overflow-hidden">
-        <listNota :list-nota="listNota" :detail-nota="dataNota" :total-price="totalPrice" :diskon="disc" @detail-trans="detailNota"/>
+        <listNota :list-nota="listNota" :detail-nota="dataNota" :total-price="totalPrice" :diskon="disc" @cancel-trans="cancel" @detail-trans="detailNota"/>
         <navigasi />
     </div>
 </template>
@@ -22,9 +22,12 @@ export default {
         await this.fetchListNota()
     },
     methods: {
-        ...mapActions(['fetchListNota', 'fetchNota']),
+        ...mapActions(['fetchListNota', 'fetchNota', 'cancelTransaksi']),
         detailNota(idTrans, diskon) {
             this.fetchNota({ id_transaksi: idTrans, disc: diskon })
+        },
+        cancel(id) {
+            this.cancelTransaksi({ id: id })
         }
     },
     components: {

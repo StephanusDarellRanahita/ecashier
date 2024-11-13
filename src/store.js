@@ -61,7 +61,8 @@ export default createStore({
                 },0)
                 let totalDisc = totalPrice * (disc / 100)
                 let finalPrice = totalPrice - totalDisc
-
+                console.log("disc" + totalDisc)
+                
                 commit('setDiscount', disc)
                 commit('setTotalPrice', finalPrice)
                 commit('setDataNota', data)
@@ -81,7 +82,7 @@ export default createStore({
                 console.error(e.response.data)
             })
         },
-        async storeNota({ commit }, { id_transaksi, id_menu }) {
+        async storeNota({ commit }, { id_transaksi, id_menu, disc }) {
             await axios.post(url + 'post-nota', {
                 id_transaksi: id_transaksi,
                 id_menu: id_menu
@@ -90,7 +91,23 @@ export default createStore({
                     Accept: 'application/json'
                 }
             }).then(res => {
-                this.dispatch('fetchNota', { id_transaksi: id_transaksi })
+                this.dispatch('fetchNota', { id_transaksi: id_transaksi, disc: disc })
+            }).catch((e) => {
+                console.error(e.response)
+                console.error(e.response.message)
+            })
+        },
+        async storeMenu({ commit }, { nama, harga }) {
+            await axios.post(url + 'post-menu', {
+                nama: nama,
+                harga: harga
+            }, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            }).then(res => {
+                console.log(res)
+                this.dispatch('fetchMenu')
             }).catch((e) => {
                 console.error(e.response)
                 console.error(e.response.message)
@@ -123,13 +140,39 @@ export default createStore({
                 console.error(e.response.message)
             })
         },
-        async updateNota({ commit }, { id_transaksi, id_menu, jumlah }) {
+        async updateNota({ commit }, { id_transaksi, id_menu, jumlah, disc }) {
             await axios.put(url + `put-nota/${id_transaksi}/${id_menu}?jumlah=${jumlah}`, {}, {
                 headers: {
                     Accept: 'application/json'
                 }
             }).then(res => {
-                this.dispatch('fetchNota', { id_transaksi: id_transaksi })
+                this.dispatch('fetchNota', { id_transaksi: id_transaksi, disc: disc })
+            }).catch((e) => {
+                console.error(e.response)
+                console.error(e.response.message)
+            })
+        },
+        async updateMenu({ commit }, { id, nama, harga }) {
+            await axios.put(url + `put-menu/${id}?nama=${nama}&harga=${harga}`, {}, {
+                headers:{
+                    Accept: 'application/json'
+                }
+            }).then(res => {
+                console.log(res)
+                this.dispatch('fetchMenu')
+            }).catch((e) => {
+                console.error(e.response)
+                console.error(e.response.message)
+            })
+        },
+        async cancelTransaksi({ commit }, { id }) {
+            await axios.put(url + `put-trans/${id}`,{}, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            }).then(res => {
+                console.log(res)
+                this.dispatch('fetchListNota')
             }).catch((e) => {
                 console.error(e.response)
                 console.error(e.response.message)
