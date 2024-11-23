@@ -2,7 +2,7 @@
   <div class="h-screen overflow-hidden">
     <nota :data-nota="dataNota" :id-transaksi="idTransaksi" :total-price="totalPrice" @submit-transaksi="submitTransaksi" @update-nota="changeNota" @apply-disc="applyDisc"/>
     <daftarMenu :filtered-menu="filterMenu" @cari-menu="cariMenu" @add-to-nota="addToNota"/>
-    <navigasi :list-menu="filterMenu" @submit-menu="submitMenu" @submit-edit-menu="changeMenu" />
+    <navigasi :list-menu="menu" @submit-menu="submitMenu" @submit-edit-menu="changeMenu" />
   </div>
 </template>
 <script>
@@ -13,7 +13,7 @@ import navigasi from './template/Navigasi.vue'
 import { mapActions, mapGetters } from 'vuex' 
 export default {
   computed: {
-    ...mapGetters(['filterMenu', 'dataNota', 'idTransaksi', 'totalPrice', 'disc']) 
+    ...mapGetters(['menu', 'filterMenu', 'dataNota', 'idTransaksi', 'totalPrice', 'disc']) 
   },
   async mounted() {
     await this.fetchMenu(),

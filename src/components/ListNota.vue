@@ -1,7 +1,7 @@
 <template>
     <div class="h-screen overflow-hidden">
         <listNota :list-nota="listNota" :detail-nota="dataNota" :total-price="totalPrice" :diskon="disc" @cancel-trans="cancel" @detail-trans="detailNota"/>
-        <navigasi />
+        <navigasi :list-menu="menu"/>
     </div>
 </template>
 <script>
@@ -10,19 +10,15 @@ import listNota from './content/DaftarTransaksi.vue'
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-    data() {
-        return { 
-            
-        }
-    },
     computed: {
-        ...mapGetters(['listNota', 'dataNota', 'totalPrice', 'disc'])
+        ...mapGetters(['menu', 'listNota', 'dataNota', 'totalPrice', 'disc', 'filterMenu'])
     },
     async mounted() {
         await this.fetchListNota()
+        await this.fetchMenu()
     },
     methods: {
-        ...mapActions(['fetchListNota', 'fetchNota', 'cancelTransaksi']),
+        ...mapActions(['fetchListNota', 'fetchNota', 'cancelTransaksi', 'fetchMenu']),
         detailNota(idTrans, diskon) {
             this.fetchNota({ id_transaksi: idTrans, disc: diskon })
         },

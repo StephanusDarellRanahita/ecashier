@@ -8,6 +8,7 @@ export default createStore({
         menu: [],
         dataNota: [],
         listNota: [],
+        laporanHari: [],
         query: '',
         idTransaksi: '',
         totalPrice: 0,
@@ -34,6 +35,9 @@ export default createStore({
         },
         setDiscount(state, disc) {
             state.disc = disc
+        },
+        setLaporanHari(state, laporanHari) {
+            state.laporanHari = laporanHari
         }
     },
     actions: {
@@ -80,6 +84,16 @@ export default createStore({
             }).catch((e) => {
                 console.error(e.response)
                 console.error(e.response.data)
+            })
+        },
+        async fetchLaporanHari() {
+            await axios.get(url + 'laporan-hari', {
+                headers: {
+                    Accept: 'application/json'
+                }
+            }).then(res => {
+                this.commit('setLaporanHari', res.data.data)
+                console.log(this.state.laporanHari)
             })
         },
         async storeNota({ commit }, { id_transaksi, id_menu, disc }) {
@@ -208,6 +222,9 @@ export default createStore({
             return state.menu.filter(item => 
                 item.nama.toLowerCase().includes(state.query.toLowerCase())
             )
+        },
+        laporanHari(state) {
+            return state.laporanHari
         }
     }
 })

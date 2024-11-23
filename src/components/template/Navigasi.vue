@@ -7,8 +7,11 @@
             <button @click="select(2)" class="flex items-center w-[4cm] border-x-2" :class="menu == 2 ? 'bg-red-300' : ''">
                 <p class="mx-auto my-auto">NOTA</p>
             </button>
+            <button @click="select(3)" class="flex items-center w-[4cm] border-r-2" :class="menu == 3 ? 'bg-red-300' : ''">
+                <p class="mx-auto my-auto">LAPORAN</p>
+            </button>
         </div>
-        <div class="flex">
+        <div class="flex" :class="menu === 1 ? '' : 'hidden'">
             <button @click="edit" class="flex items-center w-[4cm] p-[15px] hover:bg-red-300 border-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-[1cm] fill-green-300">
                     <title>pencil-circle</title>
@@ -95,7 +98,9 @@ export default {
         }
     },
     created() {
-        if (this.$route.path === '/nota') {
+        if (this.$route.path === '/laporan') {
+            this.menu = 3
+        } else if (this.$route.path === '/nota') {
             this.menu = 2
         } else {
             this.menu = 1
@@ -106,8 +111,10 @@ export default {
             this.menu = menu
             if (menu == 1)
                 this.$router.push('/')
-            else
+            else if(menu == 2)
                 this.$router.push('/nota')
+            else 
+                this.$router.push('/laporan')
         },
         selectedData() {
             console.log(this.selectedMenu)

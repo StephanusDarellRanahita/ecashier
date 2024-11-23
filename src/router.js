@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import dashboard from './components/Dashboard.vue'
 import listnota from './components/ListNota.vue'
+import laporan from './components/Laporan.vue'
 
 const routes = [
     {
@@ -10,6 +11,10 @@ const routes = [
     {
         path: "/nota",
         component: listnota
+    },
+    {
+        path: "/laporan",
+        component: laporan
     }
 ]
 
